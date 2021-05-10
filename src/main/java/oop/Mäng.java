@@ -69,10 +69,10 @@ public class Mäng extends Application {
     }
 
     //Loob mängijate massiivi nimede massiivi põhjal
-    private Mängija[] looMängijad(String[] nimed) {
-        Mängija[] mängijad = new Mängija[nimed.length];
-        for (int i = 0; i < nimed.length; i++) {
-            Mängija mängija = new Mängija(nimed[i], algRaha, 0, false, 0);
+    private Mängija[] looMängijad(List<String> nimed) {
+        Mängija[] mängijad = new Mängija[nimed.size()];
+        for (int i = 0; i < nimed.size(); i++) {
+            Mängija mängija = new Mängija(nimed.get(i), algRaha, 0, false, 0);
             mängijad[i] = mängija;
         }
         return mängijad;
@@ -200,6 +200,74 @@ public class Mäng extends Application {
                     try {
                         mäng.setAlgRaha(Integer.parseInt(stardiRahaTekst.getText()));
                         stardiRaha.hide();
+
+                        //Selle aasja lisasin
+                        int mängijate_arv = mäng.getMängijateArv();
+                        List<String> nimed = new ArrayList<>();
+
+
+                        for (int i = 0; i < mängijate_arv; i++) {
+
+                            Stage mängijaNimiAken = new Stage();
+                            Label mängijaNimeKüsimus = new Label("Sisestage "+(mängijate_arv-i)+". mängija nimi: ");
+
+                            TextField mängijaNimiTekst = new TextField();
+                            mängijaNimiTekst.setAlignment(Pos.CENTER_RIGHT);
+                            mängijaNimiTekst.setText("");
+
+                            Button okNupp3 = new Button("OK");
+
+                            okNupp3.setOnMouseClicked(event3 -> {
+                                nimed.add(mängijaNimiTekst.getText());
+                                mängijaNimiAken.hide();
+                            });
+
+                            FlowPane pane = new FlowPane(10, 10);
+                            pane.setAlignment(Pos.CENTER);
+                            pane.getChildren().add(okNupp3);
+
+                            VBox vBox = new VBox(10);
+                            vBox.setAlignment(Pos.CENTER);
+                            vBox.getChildren().addAll(mängijaNimeKüsimus, mängijaNimiTekst, pane);
+
+                            Scene stseen2 = new Scene(vBox);
+                            mängijaNimiAken.setScene(stseen2);
+                            mängijaNimiAken.show();
+                        }
+
+                        Mängija[] mängijad = mäng.looMängijad(nimed);
+                        /*
+                        siit ei tööta
+                        Stage alustaMäng = new Stage();
+                        Button alustaMängNupp = new Button("Alusta mänguga!");
+
+                        alustaMängNupp.setOnMouseClicked(eventAlustaMäng -> {
+                            boolean mängKäib = true;
+                            alustaMäng.hide();
+                            while (mängKäib) {
+                                Button veeretuseNupp = new Button("Veereta");
+                                borderPane.setCenter(veeretuseNupp);
+
+                                veeretuseNupp.setOnMouseClicked(eventVeeretus -> {
+                                    int esimeneTäring = veeretus();
+                                    int teineTäring = veeretus();
+                                });
+                            }
+
+                        });
+
+                        FlowPane pane = new FlowPane(10, 10);
+                        pane.setAlignment(Pos.CENTER);
+                        pane.getChildren().add(alustaMängNupp);
+
+                        Scene stseen2 = new Scene(pane);
+                        alustaMäng.setScene(stseen2);
+                        alustaMäng.show();
+
+                         */
+
+                        //Siit lõpeb lisatud (vist toimiv värk)
+
                     } catch (EbasobivAlgRahaErind e) {
                         Stage ebaSobivRahaAken = new Stage();
                         Label erindiSõnum = new Label(e.getMessage());
