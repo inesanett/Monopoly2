@@ -62,15 +62,18 @@ public class Mängija {
     }
 
     //Peale igat veeretust rakenduv meetod, mis korrigeerib duublite järjestikust arvu
-    public void korrigeeriDuubel(int täring1, int täring2, ArrayList<Mänguruut> mängulaud) {
+    public boolean korrigeeriDuubel(int täring1, int täring2, ArrayList<Mänguruut> mängulaud) {
         if (täring1 == täring2)
             duubliteArv += 1;
         else
             duubliteArv = 0;
         if (duubliteArv == 3) { //Kui saadakse kolmas duubel, siis rakendub vangimineku meetod
+            System.out.println("oleme siin");
             mineVangi(mängulaud);
-            System.out.println("Veeretasid kolmanda järjestikuse duubli - Lähed vangi!");
+            return true;
+            //System.out.println("Veeretasid kolmanda järjestikuse duubli - Lähed vangi!");
         }
+        return false;
     }
 
     //Meetod, mis rakendub kui on täidetud tingimused vangi minekuks

@@ -21,6 +21,7 @@ public class Mänguruut {
         this.sektsioon = sektsioon;
         this.krunt = krunt;
         this.ostetud = ostetud;
+        this.omanik=null;
     }
 
 
