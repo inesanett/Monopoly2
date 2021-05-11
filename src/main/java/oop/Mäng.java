@@ -3,6 +3,9 @@ package oop;
 import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
+import javafx.event.Event;
+import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.Scene;
@@ -17,10 +20,12 @@ import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 
 import java.util.ArrayList;
+import java.util.EventListener;
 import java.util.List;
 import java.util.Scanner;
 
@@ -28,12 +33,42 @@ import static javafx.application.Application.launch;
 
 public class Mäng extends Application {
 
-    int mängijateArv;
-    int algRaha;
+    private int mängijateArv;
+    private int algRaha;
+    private List<Mängija> mängijatelist;
+    private Color[] värvilist;
+    private List<Koordinaadid> ruuduKoordinaat;
+    private Group juur = new Group();
+    private int kelleKord;
 
     public Mäng() {
         this.mängijateArv = 0;
         this.algRaha = 150;
+        this.mängijatelist = new ArrayList<>();
+        this.värvilist = new Color[]{Color.GREEN, Color.BLUE, Color.RED, Color.YELLOW};
+        this.kelleKord = mängijateArv-1;
+        this.ruuduKoordinaat = mänguruutudeKoordinaadid();
+    }
+
+    private List<Koordinaadid> mänguruutudeKoordinaadid() {
+        List<Koordinaadid> koordinaatidelist = new ArrayList<>();
+        for (int i = 0; i < 9; i++) {
+            Koordinaadid koordinaat = new Koordinaadid(14+100*i,20);
+            koordinaatidelist.add(koordinaat);
+        }
+        for (int i = 1; i < 4; i++) {
+            Koordinaadid koordinaat = new Koordinaadid(814,20+100*i);
+            koordinaatidelist.add(koordinaat);
+        }
+        for (int i = 0; i < 9; i++) {
+            Koordinaadid koordinaat = new Koordinaadid(814-100*i,420);
+            koordinaatidelist.add(koordinaat);
+        }
+        for (int i = 1; i < 4; i++) {
+            Koordinaadid koordinaat = new Koordinaadid(14,420-100*i);
+            koordinaatidelist.add(koordinaat);
+        }
+        return koordinaatidelist;
     }
 
     //Määrab mängijate arvu, kui sisend on ebasobiv, siis viskab erindi
@@ -57,9 +92,9 @@ public class Mäng extends Application {
 
     //Määrab algraha, kui sisend on ebasobiv, siis viskab erindi
     public void setAlgRaha(int algRaha) throws EbasobivAlgRahaErind {
-        if (algRaha > 0)
+        if (algRaha > 0) {
             this.algRaha = algRaha;
-        else
+        } else
             throw new EbasobivAlgRahaErind("Stardiraha peab olema positiivne!");
     }
 
@@ -68,14 +103,51 @@ public class Mäng extends Application {
         return (int) Math.round(Math.random() * 5 + 1);
     }
 
-    //Loob mängijate massiivi nimede massiivi põhjal
-    private Mängija[] looMängijad(List<String> nimed) {
-        Mängija[] mängijad = new Mängija[nimed.size()];
-        for (int i = 0; i < nimed.size(); i++) {
-            Mängija mängija = new Mängija(nimed.get(i), algRaha, 0, false, 0);
-            mängijad[i] = mängija;
+    //Loome mummud
+    private void loomeNupud(int mängijate_arv) {
+        for (int i = 0; i < mängijatelist.size(); i++) {
+            mängijatelist.get(i).getNupp().setCenterX(ruuduKoordinaat.get(0).getX()+24*i);
+            mängijatelist.get(i).getNupp().setCenterY(ruuduKoordinaat.get(0).getY());
+            juur.getChildren().add(mängijatelist.get(i).getNupp());
         }
-        return mängijad;
+    }
+
+    private void avaAken(int mängijate_arv, int i) {
+        if (i == mängijate_arv) {
+            loomeNupud(mängijate_arv);
+            return;
+        }
+
+        Stage mängijaNimiAken = new Stage();
+        Label mängijaNimeKüsimus = new Label("Sisestage " + (i + 1) + ". mängija nimi: ");
+
+        TextField mängijaNimiTekst = new TextField();
+        mängijaNimiTekst.setAlignment(Pos.CENTER_RIGHT);
+        mängijaNimiTekst.setText("");
+
+        Button okNupp3 = new Button("OK");
+
+        okNupp3.setOnMouseClicked(event3 -> {
+            String nimi = mängijaNimiTekst.getText();
+            mängijaNimiAken.hide();
+            Mängija mängija = new Mängija(nimi, getAlgRaha(), 0, false, 0, värvilist[i]);
+            mängijatelist.add(mängija);
+            System.out.println(mängijatelist.toString());
+            avaAken(mängijate_arv, i + 1);
+        });
+
+        FlowPane pane = new FlowPane(10, 10);
+        pane.setAlignment(Pos.CENTER);
+        pane.getChildren().add(okNupp3);
+
+        VBox vBox = new VBox(10);
+        vBox.setAlignment(Pos.CENTER);
+        vBox.getChildren().addAll(mängijaNimeKüsimus, mängijaNimiTekst, pane);
+
+        Scene stseen2 = new Scene(vBox);
+        mängijaNimiAken.setScene(stseen2);
+        mängijaNimiAken.show();
+
     }
 
     public static void main(String[] args) {
@@ -84,12 +156,11 @@ public class Mäng extends Application {
 
 
     public void start(Stage peaLava) throws Exception {
-        Mäng mäng = new Mäng();
+        //Mäng mäng = new Mäng();
 
-        Group juur = new Group();
-        Canvas lõuend = new Canvas(900,500);
+        Canvas lõuend = new Canvas(900, 500);
         GraphicsContext gc = lõuend.getGraphicsContext2D();
-        gc.fillRect(100,100,700,300);
+        gc.fillRect(100, 100, 700, 300);
         BorderPane borderPane = new BorderPane(lõuend);
 
         VBox vasakServ = new VBox();
@@ -97,76 +168,76 @@ public class Mäng extends Application {
         HBox alumineServ = new HBox();
         HBox ülemineServ = new HBox();
 
-        Rectangle rect0 = new Rectangle(100,100);
+        Rectangle rect0 = new Rectangle(100, 100);
         rect0.setFill(Color.WHITESMOKE);
-        Rectangle rect1 = new Rectangle(100,100);
+        Rectangle rect1 = new Rectangle(100, 100);
         rect1.setFill(Color.BLUE);
         rect1.setOpacity(0.6);
-        Rectangle rect2 = new Rectangle(100,100);
+        Rectangle rect2 = new Rectangle(100, 100);
         rect2.setFill(Color.BLUE);
         rect2.setOpacity(0.8);
-        Rectangle rect3 = new Rectangle(100,100);
+        Rectangle rect3 = new Rectangle(100, 100);
         rect3.setFill(Color.BLUE);
-        Rectangle rect4 = new Rectangle(100,100);
+        Rectangle rect4 = new Rectangle(100, 100);
         rect4.setFill(Color.GRAY);
-        Rectangle rect5 = new Rectangle(100,100);
+        Rectangle rect5 = new Rectangle(100, 100);
         rect5.setFill(Color.MAGENTA);
         rect5.setOpacity(0.6);
-        Rectangle rect6 = new Rectangle(100,100);
+        Rectangle rect6 = new Rectangle(100, 100);
         rect6.setFill(Color.MAGENTA);
         rect6.setOpacity(0.8);
-        Rectangle rect7 = new Rectangle(100,100);
+        Rectangle rect7 = new Rectangle(100, 100);
         rect7.setFill(Color.MAGENTA);
-        Rectangle rect8 = new Rectangle(100,100);
+        Rectangle rect8 = new Rectangle(100, 100);
         rect8.setFill(Color.DARKGRAY);
-        alumineServ.getChildren().addAll(rect8,rect7,rect6,rect5,rect4,rect3,rect2,rect1,rect0);
+        alumineServ.getChildren().addAll(rect8, rect7, rect6, rect5, rect4, rect3, rect2, rect1, rect0);
         borderPane.setBottom(alumineServ);
 
-        Rectangle rect9 = new Rectangle(100,100);
+        Rectangle rect9 = new Rectangle(100, 100);
         rect9.setFill(Color.ORANGE);
         rect9.setOpacity(0.6);
-        Rectangle rect10 = new Rectangle(100,100);
+        Rectangle rect10 = new Rectangle(100, 100);
         rect10.setFill(Color.ORANGE);
         rect10.setOpacity(0.8);
-        Rectangle rect11 = new Rectangle(100,100);
+        Rectangle rect11 = new Rectangle(100, 100);
         rect11.setFill(Color.ORANGE);
-        vasakServ.getChildren().addAll(rect11,rect10,rect9);
+        vasakServ.getChildren().addAll(rect11, rect10, rect9);
         borderPane.setLeft(vasakServ);
 
-        Rectangle rect12 = new Rectangle(100,100);
+        Rectangle rect12 = new Rectangle(100, 100);
         rect12.setFill(Color.WHITESMOKE);
-        Rectangle rect13 = new Rectangle(100,100);
+        Rectangle rect13 = new Rectangle(100, 100);
         rect13.setFill(Color.RED);
         rect13.setOpacity(0.6);
-        Rectangle rect14 = new Rectangle(100,100);
+        Rectangle rect14 = new Rectangle(100, 100);
         rect14.setFill(Color.RED);
         rect14.setOpacity(0.8);
-        Rectangle rect15 = new Rectangle(100,100);
+        Rectangle rect15 = new Rectangle(100, 100);
         rect15.setFill(Color.RED);
-        Rectangle rect16 = new Rectangle(100,100);
+        Rectangle rect16 = new Rectangle(100, 100);
         rect16.setFill(Color.GRAY);
-        Rectangle rect17 = new Rectangle(100,100);
+        Rectangle rect17 = new Rectangle(100, 100);
         rect17.setFill(Color.YELLOW);
         rect17.setOpacity(0.6);
-        Rectangle rect18 = new Rectangle(100,100);
+        Rectangle rect18 = new Rectangle(100, 100);
         rect18.setFill(Color.YELLOW);
         rect18.setOpacity(0.8);
-        Rectangle rect19 = new Rectangle(100,100);
+        Rectangle rect19 = new Rectangle(100, 100);
         rect19.setFill(Color.YELLOW);
-        Rectangle rect20 = new Rectangle(100,100);
+        Rectangle rect20 = new Rectangle(100, 100);
         rect20.setFill(Color.DARKGRAY);
-        ülemineServ.getChildren().addAll(rect12,rect13,rect14,rect15,rect16,rect17,rect18,rect19,rect20);
+        ülemineServ.getChildren().addAll(rect12, rect13, rect14, rect15, rect16, rect17, rect18, rect19, rect20);
         borderPane.setTop(ülemineServ);
 
-        Rectangle rect21 = new Rectangle(100,100);
+        Rectangle rect21 = new Rectangle(100, 100);
         rect21.setFill(Color.GREEN);
         rect21.setOpacity(0.6);
-        Rectangle rect22 = new Rectangle(100,100);
+        Rectangle rect22 = new Rectangle(100, 100);
         rect22.setFill(Color.GREEN);
         rect22.setOpacity(0.8);
-        Rectangle rect23 = new Rectangle(100,100);
+        Rectangle rect23 = new Rectangle(100, 100);
         rect23.setFill(Color.GREEN);
-        paremServ.getChildren().addAll(rect21,rect22,rect23);
+        paremServ.getChildren().addAll(rect21, rect22, rect23);
         borderPane.setRight(paremServ);
 
         juur.getChildren().add(borderPane);
@@ -185,8 +256,9 @@ public class Mäng extends Application {
 
         okNupp.setOnMouseClicked(event1 -> {
             try {
-                mäng.setMängijateArv(Integer.parseInt(mängjateArvuTekst.getText()));
+                this.setMängijateArv(Integer.parseInt(mängjateArvuTekst.getText()));
                 mituMängijat.hide();
+                int mängijate_arv = this.getMängijateArv();
 
                 Stage stardiRaha = new Stage();
                 Label stardiRahaKüsimus = new Label("Sisestage stardiraha (positiivne täisarv)");
@@ -198,46 +270,104 @@ public class Mäng extends Application {
 
                 okNupp2.setOnMouseClicked(event2 -> {
                     try {
-                        mäng.setAlgRaha(Integer.parseInt(stardiRahaTekst.getText()));
+                        this.setAlgRaha(Integer.parseInt(stardiRahaTekst.getText()));
                         stardiRaha.hide();
 
-                        //Selle aasja lisasin
-                        int mängijate_arv = mäng.getMängijateArv();
                         List<String> nimed = new ArrayList<>();
 
+                        avaAken(mängijate_arv, 0);
 
-                        for (int i = 0; i < mängijate_arv; i++) {
+                        ArrayList<Mänguruut> mängulaud = Mängulaud.mängulauaLoomine();
 
-                            Stage mängijaNimiAken = new Stage();
-                            Label mängijaNimeKüsimus = new Label("Sisestage "+(mängijate_arv-i)+". mängija nimi: ");
+                        Button veeretuseNupp = new Button("Veereta");
+                        Button ostaNupp = new Button("Ostan krundi");
+                        Button eiOstaNupp = new Button("Ei soovi krunti osta");
 
-                            TextField mängijaNimiTekst = new TextField();
-                            mängijaNimiTekst.setAlignment(Pos.CENTER_RIGHT);
-                            mängijaNimiTekst.setText("");
+                        veeretuseNupp.setLayoutX(430);
+                        veeretuseNupp.setLayoutY(240);
 
-                            Button okNupp3 = new Button("OK");
+                        ostaNupp.setLayoutX(330);
+                        ostaNupp.setLayoutY(240);
 
-                            okNupp3.setOnMouseClicked(event3 -> {
-                                nimed.add(mängijaNimiTekst.getText());
-                                mängijaNimiAken.hide();
-                            });
+                        eiOstaNupp.setLayoutX(510);
+                        eiOstaNupp.setLayoutY(240);
 
-                            FlowPane pane = new FlowPane(10, 10);
-                            pane.setAlignment(Pos.CENTER);
-                            pane.getChildren().add(okNupp3);
+                        juur.getChildren().add(veeretuseNupp);
+                        juur.getChildren().add(ostaNupp);
+                        juur.getChildren().add(eiOstaNupp);
 
-                            VBox vBox = new VBox(10);
-                            vBox.setAlignment(Pos.CENTER);
-                            vBox.getChildren().addAll(mängijaNimeKüsimus, mängijaNimiTekst, pane);
+                        veeretuseNupp.setOnMouseClicked(eventVeeretus -> {
 
-                            Scene stseen2 = new Scene(vBox);
-                            mängijaNimiAken.setScene(stseen2);
-                            mängijaNimiAken.show();
-                        }
+                            kelleKord+=1;
+                            if (kelleKord == mängijate_arv)
+                                kelleKord = 0;
 
-                        Mängija[] mängijad = mäng.looMängijad(nimed);
+                            int esimeneTäring = veeretus();
+                            int teineTäring = veeretus();
+
+                            Mängija praeguseKäiguMängija = mängijatelist.get(kelleKord);
+
+                            praeguseKäiguMängija.korrigeeriDuubel(esimeneTäring,teineTäring, mängulaud);
+
+                            if (!praeguseKäiguMängija.isVangis()) {
+                                int uusAsukohaIndeks = praeguseKäiguMängija.getAsukoht() + esimeneTäring + teineTäring;
+                                if (uusAsukohaIndeks > 23) {
+                                    uusAsukohaIndeks = uusAsukohaIndeks - 24;
+                                }
+
+                                praeguseKäiguMängija.setAsukoht(uusAsukohaIndeks);
+                                praeguseKäiguMängija.getNupp().setCenterX(ruuduKoordinaat.get(uusAsukohaIndeks).getX() + 24 * kelleKord);
+                                praeguseKäiguMängija.getNupp().setCenterY(ruuduKoordinaat.get(uusAsukohaIndeks).getY());
+                            } else {
+                                //Võib teha et ainult duubliga saab vangist välja
+                                if (esimeneTäring == teineTäring)
+                                    praeguseKäiguMängija.setVangis(false);
+                            }
+
+
+                            System.out.println(mängulaud.get(praeguseKäiguMängija.getAsukoht()).isOstetud());
+                            System.out.println(!(mängulaud.get(praeguseKäiguMängija.getAsukoht()).isKrunt()));
+                            System.out.println(praeguseKäiguMängija.getRaha());
+                            System.out.println(mängulaud.get(praeguseKäiguMängija.getAsukoht()).getHind());
+                            System.out.println(praeguseKäiguMängija.getRaha()<mängulaud.get(praeguseKäiguMängija.getAsukoht()).getHind());
+                            System.out.println();
+
+                            if (mängulaud.get(praeguseKäiguMängija.getAsukoht()).isOstetud() || !(mängulaud.get(praeguseKäiguMängija.getAsukoht()).isKrunt()) ||
+                                    praeguseKäiguMängija.getRaha()<mängulaud.get(praeguseKäiguMängija.getAsukoht()).getHind()) {
+                                ostaNupp.setDisable(true);
+                                eiOstaNupp.setDisable(true);
+                                veeretuseNupp.setDisable(false);
+                            } else {
+                                veeretuseNupp.setDisable(true);
+                                ostaNupp.setDisable(false);
+                                eiOstaNupp.setDisable(false);
+                            }
+                        });
+
+                        ostaNupp.setOnMouseClicked(eventOstmine -> {
+
+                            Mängija praeguseKäiguMängija = mängijatelist.get(kelleKord);
+
+                            mängulaud.get(praeguseKäiguMängija.getAsukoht()).setOstetud(true);
+                            mängulaud.get(praeguseKäiguMängija.getAsukoht()).setOmanik(mängijatelist.get(kelleKord));
+                            mängijatelist.get(kelleKord).setRaha(mängijatelist.get(kelleKord).getRaha() - mängulaud.get(praeguseKäiguMängija.getAsukoht()).getHind());
+                            //Peaks pidevalt näitama mängijate raha ja siin seda muutma
+                            ostaNupp.setDisable(true);
+                            eiOstaNupp.setDisable(true);
+                            veeretuseNupp.setDisable(false);
+
+                        });
+
+                        eiOstaNupp.setOnMouseClicked(eventMitteOstmine -> {
+                            veeretuseNupp.setDisable(false);
+                            ostaNupp.setDisable(true);
+                            eiOstaNupp.setDisable(true);
+                        });
+
+
+
                         /*
-                        siit ei tööta
+                        //siit ei tööta
                         Stage alustaMäng = new Stage();
                         Button alustaMängNupp = new Button("Alusta mänguga!");
 
@@ -265,6 +395,7 @@ public class Mäng extends Application {
                         alustaMäng.show();
 
                          */
+
 
                         //Siit lõpeb lisatud (vist toimiv värk)
 
@@ -304,25 +435,25 @@ public class Mäng extends Application {
                 stardiRaha.show();
 
             } catch (EbasobivMängijateArvErind e) {
-               Stage ebaSobivMängijateArvAken = new Stage();
-               Label erindiSõnum = new Label(e.getMessage());
-               Button sulge = new Button("Sulge aken");
+                Stage ebaSobivMängijateArvAken = new Stage();
+                Label erindiSõnum = new Label(e.getMessage());
+                Button sulge = new Button("Sulge aken");
 
-               sulge.setOnMouseClicked(event2 -> {
-                   ebaSobivMängijateArvAken.hide();
-               });
+                sulge.setOnMouseClicked(event2 -> {
+                    ebaSobivMängijateArvAken.hide();
+                });
 
-               FlowPane pane = new FlowPane(10, 10);
-               pane.setAlignment(Pos.CENTER);
-               pane.getChildren().add(sulge);
+                FlowPane pane = new FlowPane(10, 10);
+                pane.setAlignment(Pos.CENTER);
+                pane.getChildren().add(sulge);
 
-               VBox vBox = new VBox(10);
-               vBox.setAlignment(Pos.CENTER);
-               vBox.getChildren().addAll(erindiSõnum, pane);
+                VBox vBox = new VBox(10);
+                vBox.setAlignment(Pos.CENTER);
+                vBox.getChildren().addAll(erindiSõnum, pane);
 
-               Scene stseen2 = new Scene(vBox);
-               ebaSobivMängijateArvAken.setScene(stseen2);
-               ebaSobivMängijateArvAken.show();
+                Scene stseen2 = new Scene(vBox);
+                ebaSobivMängijateArvAken.setScene(stseen2);
+                ebaSobivMängijateArvAken.show();
             }
         });
 

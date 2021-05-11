@@ -1,6 +1,9 @@
 package oop;
 
 //import java.sql.SQLOutput;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
+
 import java.util.ArrayList;
 
 public class Mängija {
@@ -12,14 +15,42 @@ public class Mängija {
     private boolean vangis;
     private int duubliteArv;
 
+    private Circle nupp;
+    private Color värv;
+    private Koordinaadid koordinaadid;
+
     //Konstruktor
-    public Mängija(String nimi, int raha, int asukoht, boolean vangis, int duubliteArv) {
+    public Mängija(String nimi, int raha, int asukoht, boolean vangis, int duubliteArv, Color värv) {
         this.nimi = nimi;
         this.raha = raha;
         this.asukoht = asukoht;
         this.vangis = vangis;
         this.duubliteArv = duubliteArv;
+        this.nupp = new Circle(10);
+        this.nupp.setFill(värv);
+
     }
+
+    public void setAsukoht(int asukoht) {
+        this.asukoht = asukoht;
+    }
+
+    public void setNupp(Circle nupp) {
+        this.nupp = nupp;
+    }
+
+    public void setVärv(Color värv) {
+        this.värv = värv;
+    }
+
+    public Circle getNupp() {
+        return nupp;
+    }
+
+    public Color getVärv() {
+        return värv;
+    }
+
 
     //Meetod, mis kontrollib kas mängija on pankrotis
     public boolean onPankrotis(){
