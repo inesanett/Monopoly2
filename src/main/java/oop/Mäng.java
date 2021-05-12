@@ -19,6 +19,7 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
+
 import java.io.*;
 import java.time.LocalDateTime;
 import java.util.*;
@@ -71,6 +72,8 @@ public class Mäng extends Application {
             throw new EbasobivMängijateArvErind("Mängijate arv ei saa olla negatiivne! ");
         } else if (mängijateArv > 4) {
             throw new EbasobivMängijateArvErind("Mängijate arv ei tohi olla üle nelja!");
+        } else if (mängijateArv == 0) {
+            throw new EbasobivMängijateArvErind("Nulli mängijaga ei saa mängu mängida!");
         } else {
             this.mängijateArv = mängijateArv;
         }
@@ -99,43 +102,43 @@ public class Mäng extends Application {
 
     //Lõputingimuse kontrollimine
     private void lõpuTingimus(Mängija mängija, String põhjus) {
-        if (mängija.getRaha()<0) {
-            Rectangle rectangle = new Rectangle(900,500);
+        if (mängija.getRaha() < 0) {
+            Rectangle rectangle = new Rectangle(900, 500);
             juur.getChildren().add(rectangle);
-            Label kaotaja = new Label("Mäng sai läbi! "+mängija.getNimi()+" kaotas!");
+            Label kaotaja = new Label("Mäng sai läbi! " + mängija.getNimi() + " kaotas!");
             Label põhjuselabel = new Label(põhjus);
             põhjuselabel.setLayoutX(270);
             põhjuselabel.setLayoutY(300);
-            põhjuselabel.setTextFill(Color.RED);
+            põhjuselabel.setTextFill(Color.ANTIQUEWHITE);
             põhjuselabel.setFont(Font.font("Cambria", 30));
-            kaotaja.setTextFill(Color.RED);
+            kaotaja.setTextFill(Color.ANTIQUEWHITE);
             kaotaja.setFont(Font.font("Cambria", 30));
             kaotaja.setLayoutY(230);
             kaotaja.setLayoutX(250);
-            juur.getChildren().addAll(kaotaja,põhjuselabel);
+            juur.getChildren().addAll(kaotaja, põhjuselabel);
 
-            Label lõputekst = new Label("Mängu salvestamiseks vajuta alumises kastis \"ENTER\"");
-            lõputekst.setTextFill(Color.BLUE);
-            lõputekst.setLayoutX(300);
+            Label lõputekst = new Label("Mängu salvestamiseks vajuta kastis \"ENTER\"");
+            lõputekst.setTextFill(Color.LIGHTBLUE);
+            lõputekst.setLayoutX(270);
             lõputekst.setLayoutY(100);
-            lõputekst.setFont(Font.font("Cambria", 15));
+            lõputekst.setFont(Font.font("Cambria", 17));
             juur.getChildren().add(lõputekst);
 
             TextField tekst = new TextField();
-            tekst.setText("ENTER");
-            tekst.setLayoutX(400);
+            tekst.setText("SALVESTA!");
+            tekst.setLayoutX(360);
             tekst.setLayoutY(150);
 
             tekst.setOnKeyPressed(keyEvent -> {
                 if (keyEvent.getCode() == KeyCode.ENTER) {
                     tekst.setText("SALVESTATUD!");
-                    try (BufferedWriter bw = new BufferedWriter(new FileWriter("Tulemused.txt",true))) {
-                        bw.write("Mäng toimus: "+LocalDateTime.now()+"\n");
-                        bw.write("Kaotaja: "+mängija.getNimi()+"\n");
+                    try (BufferedWriter bw = new BufferedWriter(new FileWriter("Tulemused.txt", true))) {
+                        bw.write("Mäng toimus: " + LocalDateTime.now() + "\n");
+                        bw.write("Kaotaja: " + mängija.getNimi() + "\n");
                         mängijatelist.remove(mängija);
                         bw.write("Võitja(d): \n");
-                        for (int i = 0; i < mängijatelist.size(); i++) {
-                            bw.write(mängijatelist.get(i).getNimi()+"\n");
+                        for (Mängija m : mängijatelist) {
+                            bw.write(m.getNimi() + "\n");
                         }
                         bw.write("-----------------------------------------------------------------\n");
                     } catch (IOException e) {
@@ -423,30 +426,29 @@ public class Mäng extends Application {
                         //X-d vanglisolijate peale
                         Label vangis1 = new Label("X");
                         vangis1.setTextFill(Color.BLACK);
-                        vangis1.setLayoutX(ruuduKoordinaat.get(Mängulaud.leiaVangla(mängulaud)).getX()-5);
-                        vangis1.setLayoutY(ruuduKoordinaat.get(Mängulaud.leiaVangla(mängulaud)).getY()-10);
+                        vangis1.setLayoutX(ruuduKoordinaat.get(Mängulaud.leiaVangla(mängulaud)).getX() - 5);
+                        vangis1.setLayoutY(ruuduKoordinaat.get(Mängulaud.leiaVangla(mängulaud)).getY() - 10);
                         vangis1.setFont(Font.font("Cambria", FontWeight.BOLD, 16));
-                        System.out.println("siin");
                         vangis1.setVisible(false);
 
                         Label vangis2 = new Label("X");
                         vangis2.setTextFill(Color.BLACK);
-                        vangis2.setLayoutX(ruuduKoordinaat.get(Mängulaud.leiaVangla(mängulaud)).getX()+ 24 -5);
-                        vangis2.setLayoutY(ruuduKoordinaat.get(Mängulaud.leiaVangla(mängulaud)).getY()-10);
+                        vangis2.setLayoutX(ruuduKoordinaat.get(Mängulaud.leiaVangla(mängulaud)).getX() + 24 - 5);
+                        vangis2.setLayoutY(ruuduKoordinaat.get(Mängulaud.leiaVangla(mängulaud)).getY() - 10);
                         vangis2.setFont(Font.font("Cambria", FontWeight.BOLD, 16));
                         vangis2.setVisible(false);
 
                         Label vangis3 = new Label("X");
                         vangis3.setTextFill(Color.BLACK);
-                        vangis3.setLayoutX(ruuduKoordinaat.get(Mängulaud.leiaVangla(mängulaud)).getX()+ (24 * 2)-5);
-                        vangis3.setLayoutY(ruuduKoordinaat.get(Mängulaud.leiaVangla(mängulaud)).getY()-10);
+                        vangis3.setLayoutX(ruuduKoordinaat.get(Mängulaud.leiaVangla(mängulaud)).getX() + (24 * 2) - 5);
+                        vangis3.setLayoutY(ruuduKoordinaat.get(Mängulaud.leiaVangla(mängulaud)).getY() - 10);
                         vangis3.setFont(Font.font("Cambria", FontWeight.BOLD, 16));
                         vangis3.setVisible(false);
 
                         Label vangis4 = new Label("X");
                         vangis4.setTextFill(Color.BLACK);
-                        vangis4.setLayoutX(ruuduKoordinaat.get(Mängulaud.leiaVangla(mängulaud)).getX()+ (24 * 3)-5);
-                        vangis4.setLayoutY(ruuduKoordinaat.get(Mängulaud.leiaVangla(mängulaud)).getY()-10);
+                        vangis4.setLayoutX(ruuduKoordinaat.get(Mängulaud.leiaVangla(mängulaud)).getX() + (24 * 3) - 5);
+                        vangis4.setLayoutY(ruuduKoordinaat.get(Mängulaud.leiaVangla(mängulaud)).getY() - 10);
                         vangis4.setFont(Font.font("Cambria", FontWeight.BOLD, 16));
                         vangis4.setVisible(false);
 
@@ -494,8 +496,7 @@ public class Mäng extends Application {
                                 boolean kasKolmasDuubel = praeguseKäiguMängija.korrigeeriDuubel(esimeneTäring, teineTäring, mängulaud);
                                 //Kontrollib, kas lähed duubli tõttu vangi
                                 if (kasKolmasDuubel) {
-                                    System.out.println("kolmasDuuble true");
-                                    infoSilt.setText(praeguseKäiguMängija.getNimi()+ ": Veeretasid 3. duubli! Lähed Vangi!");
+                                    infoSilt.setText(praeguseKäiguMängija.getNimi() + ": Veeretasid 3. duubli! Lähed Vangi!");
                                     praeguseKäiguMängija.getNupp().setCenterX(ruuduKoordinaat.get(praeguseKäiguMängija.getAsukoht()).getX() + 24 * kelleKord);
                                     praeguseKäiguMängija.getNupp().setCenterY(ruuduKoordinaat.get(praeguseKäiguMängija.getAsukoht()).getY());
                                 } else {
@@ -504,6 +505,7 @@ public class Mäng extends Application {
                                     if (uusAsukohaIndeks > 23) {
                                         uusAsukohaIndeks = uusAsukohaIndeks - 24;
                                         praeguseKäiguMängija.setRaha(praeguseKäiguMängija.getRaha() + (getAlgRaha() / 10));
+                                        mängijateRahadeLabel.get(kelleKord).setText(mängijatelist.get(kelleKord).getNimi() + " raha: " + mängijatelist.get(kelleKord).getRaha());
                                     }
 
                                     //Kõnnib järgmisele ruudule
@@ -523,25 +525,25 @@ public class Mäng extends Application {
                                         //Kui ruut ei ole krunt, siis on tegu tegevusruuduga
                                         if (uusAsukohaIndeks == Mängulaud.leiaVangiMinek(mängulaud)) {
                                             //Kui satud vangiminekuruudule
-                                            infoSilt.setText(praeguseKäiguMängija.getNimi() +": Sattusid \"Mine vangi\" ruudule! Lähed Vangi!");
+                                            infoSilt.setText(praeguseKäiguMängija.getNimi() + ": Sattusid \"Mine vangi\" ruudule! Lähed Vangi!");
                                             praeguseKäiguMängija.mineVangi(mängulaud);
                                             praeguseKäiguMängija.getNupp().setCenterX(ruuduKoordinaat.get(Mängulaud.leiaVangla(mängulaud)).getX() + 24 * kelleKord);
                                             praeguseKäiguMängija.getNupp().setCenterY(ruuduKoordinaat.get(Mängulaud.leiaVangla(mängulaud)).getY());
                                         } else if (mängulaud.get(uusAsukohaIndeks).getNimi().equals("Loos")) {
                                             //Kui satud loosiruudule
                                             int loosiRaha = (int) (Math.random() * (2 * getAlgRaha() + 1) - getAlgRaha());
-                                            if (loosiRaha <0)
-                                                infoSilt.setText(praeguseKäiguMängija.getNimi()+ ": Sattusid loosiruudule! Kaotasid "+(-loosiRaha)+" raha!");
+                                            if (loosiRaha < 0)
+                                                infoSilt.setText(praeguseKäiguMängija.getNimi() + ": Sattusid loosiruudule! Kaotasid " + (-loosiRaha) + " raha!");
                                             else
-                                                infoSilt.setText(praeguseKäiguMängija.getNimi()+ ": Sattusid loosiruudule! Võitsid "+loosiRaha+" raha!");
+                                                infoSilt.setText(praeguseKäiguMängija.getNimi() + ": Sattusid loosiruudule! Võitsid " + loosiRaha + " raha!");
                                             praeguseKäiguMängija.setRaha(praeguseMängijaraha + loosiRaha);
                                             lõpuTingimus(praeguseKäiguMängija, "Läksid loosiga pankrotti!");
                                         } else if (mängulaud.get(uusAsukohaIndeks).getNimi().equals("Tulumaks")) {
                                             //Kui satud tulumaksuruudule
                                             int tulumaks = getAlgRaha() / 10;
-                                            infoSilt.setText(praeguseKäiguMängija.getNimi()+ ": Sattusid ruudule \"Tulumaks\"! Maksad "+tulumaks+" raha!" );
-                                            lõpuTingimus(praeguseKäiguMängija,"Tulumaks oli üle jõu!");
+                                            infoSilt.setText(praeguseKäiguMängija.getNimi() + ": Sattusid ruudule \"Tulumaks\"! Maksad " + tulumaks + " raha!");
                                             praeguseKäiguMängija.setRaha(praeguseMängijaraha - tulumaks);
+                                            lõpuTingimus(praeguseKäiguMängija, "Tulumaks oli üle jõu!");
                                         } else {
                                             //Kui satud vangla- või stardiruudule
                                             ostaNupp.setDisable(true);
@@ -558,8 +560,8 @@ public class Mäng extends Application {
                                                 //Kui omanik ei ole vangis, maksad talle renti
                                                 praeguseKäiguMängija.setRaha(praeguseMängijaraha - mänguruuduRent);
                                                 ruut.getOmanik().setRaha(ruuduOmanikuRaha + mänguruuduRent);
-                                                if (ruut.getOmanik()!=praeguseKäiguMängija)
-                                                    infoSilt.setText(praeguseKäiguMängija.getNimi()+ ": Sattusid "+ruut.getOmanik().getNimi()+" krundile! Maksad talle "+mänguruuduRent+" raha!" );
+                                                if (ruut.getOmanik() != praeguseKäiguMängija)
+                                                    infoSilt.setText(praeguseKäiguMängija.getNimi() + ": Selle krundi omanik on " + ruut.getOmanik().getNimi() + ". Maksad talle " + mänguruuduRent + " raha!");
                                                 lõpuTingimus(praeguseKäiguMängija, "Rendi maksmine võttis raha ära!");
                                             } else {
                                                 //Kui omanik on vangis, siis maksma ei pea, aga osta ei saa
@@ -586,17 +588,15 @@ public class Mäng extends Application {
                             } else {
                                 //Kui sa olid vangis, siis kui sa veeretasid duubli - enam ei ole vangis
                                 if (esimeneTäring == teineTäring) {
-                                    infoSilt.setText(praeguseKäiguMängija.getNimi()+": Veeretasid duubli! Pääsed vanglast!");
+                                    infoSilt.setText(praeguseKäiguMängija.getNimi() + ": Veeretasid duubli! Pääsed vanglast!");
                                     xList.get(kelleKord).setVisible(false);
                                     xList.get(kelleKord).toFront();
-                                    System.out.println(xList.get(kelleKord).isVisible());
                                     praeguseKäiguMängija.setVangis(false);
                                 }
                             }
 
                             if (praeguseKäiguMängija.isVangis()) {
                                 xList.get(kelleKord).setVisible(true);
-                                System.out.println(xList.get(kelleKord).isVisible());
                             }
                         });
 
@@ -690,7 +690,7 @@ public class Mäng extends Application {
         mituMängijat.setScene(stseen2);
         mituMängijat.setResizable(false);
 
-        peaLava.setTitle("Monopoly");
+        peaLava.setTitle("Monopoly (mängu saad sulgeda ristist)");
         Scene stseen = new Scene(juur);
         peaLava.setScene(stseen);
         peaLava.show();

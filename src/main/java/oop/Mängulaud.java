@@ -25,19 +25,19 @@ public class Mängulaud {
         }
         return mängulaud;
     }
-    
+
     //Meetod, mis leiab konkreetse mängulaua korral üles vangi saatmise ruudu indeksi
     public static int leiaVangiMinek(ArrayList<Mänguruut> mängulaud) {
-        for (int i = 0; i < mängulaud.size() ; i++) {
+        for (int i = 0; i < mängulaud.size(); i++) {
             if (mängulaud.get(i).getNimi().equals("Vangiminek"))
-                    return i;
+                return i;
         }
         return 0;
     }
 
     //Meetod, mis leiab konkreetse mängulaua korral üles vangla indeksi
     public static int leiaVangla(ArrayList<Mänguruut> mängulaud) {
-        for (int i = 0; i < mängulaud.size() ; i++) {
+        for (int i = 0; i < mängulaud.size(); i++) {
             if (mängulaud.get(i).getNimi().equals("Vangla"))
                 return i;
         }

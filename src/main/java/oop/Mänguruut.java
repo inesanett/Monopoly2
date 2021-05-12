@@ -19,7 +19,7 @@ public class Mänguruut {
         this.sektsioon = sektsioon;
         this.krunt = krunt;
         this.ostetud = ostetud;
-        this.omanik=null;
+        this.omanik = null;
     }
 
     public String getNimi() {

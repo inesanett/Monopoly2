@@ -40,7 +40,6 @@ public class Mängija {
         else
             duubliteArv = 0;
         if (duubliteArv == 3) { //Kui saadakse kolmas duubel, siis rakendub vangimineku meetod
-            System.out.println("oleme siin");
             mineVangi(mängulaud);
             return true;
         }
@@ -54,32 +53,19 @@ public class Mängija {
         asukoht = Mängulaud.leiaVangla(mängulaud);
     }
 
-    //Meetod, mis rakendub, kui mängija on vangis
-    public void veeretaVangistVabaks(ArrayList<Mänguruut> mängulaud) {
-        if (duubliteArv == 1) {
-            vangis = false;
-            asukoht = Mängulaud.leiaVangla(mängulaud);
-            duubliteArv = 0;
-            System.out.println("Vabanesid vangist!");
-        }
-    }
-
     public String getNimi() {
         return nimi;
     }
 
     public int getRaha() {
-
         return raha;
     }
 
     public void setRaha(int raha) {
-
         this.raha = raha;
     }
 
     public int getAsukoht() {
-
         return asukoht;
     }
 
