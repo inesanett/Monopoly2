@@ -26,20 +26,12 @@ public class Mänguruut {
         return nimi;
     }
 
-    public int getAsukoht() {
-        return asukoht;
-    }
-
     public int getHind() {
         return hind;
     }
 
     public int getRent() {
         return rent;
-    }
-
-    public String getSektsioon() {
-        return sektsioon;
     }
 
     public boolean isKrunt() {
@@ -52,10 +44,6 @@ public class Mänguruut {
 
     public Mängija getOmanik() {
         return omanik;
-    }
-
-    public void setRent(int rent) {
-        this.rent = rent;
     }
 
     public void setOstetud(boolean ostetud) {

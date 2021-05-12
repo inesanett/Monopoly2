@@ -12,10 +12,8 @@ public class Mängija {
     private int asukoht;
     private boolean vangis;
     private int duubliteArv;
-
     private Circle nupp;
     private Color värv;
-    private Koordinaadid koordinaadid;
 
     public Mängija(String nimi, int raha, int asukoht, boolean vangis, int duubliteArv, Color värv) {
         this.nimi = nimi;
@@ -25,37 +23,14 @@ public class Mängija {
         this.duubliteArv = duubliteArv;
         this.nupp = new Circle(10);
         this.nupp.setFill(värv);
-
     }
 
     public void setAsukoht(int asukoht) {
         this.asukoht = asukoht;
     }
 
-    public void setNupp(Circle nupp) {
-        this.nupp = nupp;
-    }
-
-    public void setVärv(Color värv) {
-        this.värv = värv;
-    }
-
     public Circle getNupp() {
         return nupp;
-    }
-
-    public Color getVärv() {
-        return värv;
-    }
-
-
-    //Meetod, mis kontrollib kas mängija on pankrotis
-    public boolean onPankrotis(){
-        if (this.raha < 0) {
-            System.out.println("Mängija "+this.getNimi()+" on nüüd pankrotis ja kaotas. Mäng sai läbi.");
-            return false; //return false, sest selliseks määratakse klassis "Mäng" muutuja mängKäib
-        } else
-            return true;
     }
 
     //Peale igat veeretust rakenduv meetod, mis korrigeerib duublite järjestikust arvu
@@ -68,7 +43,6 @@ public class Mängija {
             System.out.println("oleme siin");
             mineVangi(mängulaud);
             return true;
-            //System.out.println("Veeretasid kolmanda järjestikuse duubli - Lähed vangi!");
         }
         return false;
     }
@@ -94,11 +68,6 @@ public class Mängija {
         return nimi;
     }
 
-    public void setNimi(String nimi) {
-
-        this.nimi = nimi;
-    }
-
     public int getRaha() {
 
         return raha;
@@ -118,19 +87,10 @@ public class Mängija {
         this.vangis = vangis;
     }
 
-    public int getDuubliteArv() {
-        return duubliteArv;
-    }
-
-    public void setDuubliteArv(int duubliteArv) {
-        this.duubliteArv = duubliteArv;
-    }
-
     public boolean isVangis() {
         return vangis;
     }
 
-    //toString
     @Override
     public String toString() {
         return "Mängija{" +

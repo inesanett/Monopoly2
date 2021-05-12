@@ -1,7 +1,6 @@
 package oop;
 
 import javafx.application.Application;
-import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.Scene;
@@ -11,7 +10,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
@@ -21,12 +19,9 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
-
 import java.io.*;
 import java.time.LocalDateTime;
 import java.util.*;
-
-//import static javafx.application.Application.launch;
 
 public class Mäng extends Application {
 
@@ -39,7 +34,7 @@ public class Mäng extends Application {
     private int kelleKord;
     private ArrayList<Mänguruut> mängulaud;
 
-    public Mäng() throws FileNotFoundException {
+    public Mäng() {
         this.mängijateArv = 0;
         this.algRaha = 150;
         this.mängijatelist = new ArrayList<>();
@@ -107,7 +102,7 @@ public class Mäng extends Application {
         if (mängija.getRaha()<0) {
             Rectangle rectangle = new Rectangle(900,500);
             juur.getChildren().add(rectangle);
-            Label kaotaja = new Label("Mäng sai läbi! "+mängija.getNimi()+" Kaotas!");
+            Label kaotaja = new Label("Mäng sai läbi! "+mängija.getNimi()+" kaotas!");
             Label põhjuselabel = new Label(põhjus);
             põhjuselabel.setLayoutX(270);
             põhjuselabel.setLayoutY(300);
@@ -124,7 +119,6 @@ public class Mäng extends Application {
             lõputekst.setLayoutX(300);
             lõputekst.setLayoutY(100);
             lõputekst.setFont(Font.font("Cambria", 15));
-
             juur.getChildren().add(lõputekst);
 
             TextField tekst = new TextField();
@@ -149,23 +143,7 @@ public class Mäng extends Application {
                     }
                 }
             });
-
             juur.getChildren().add(tekst);
-/*
-            Label salvestamine = new Label("Kas soovid mängu tulemuse salvestada (vajuta ENTER)? ");
-            salvestamine.setLayoutX(200);
-            salvestamine.setLayoutY(170);
-            salvestamine.setTextFill(Color.YELLOW);
-            salvestamine.setFont(Font.font("Cambria",20));
-            salvestamine.setOnKeyPressed(keyEvent -> {
-                if (keyEvent.getCode() == KeyCode.ENTER) {
-                    salvestamine.setText("Tere");
-                    System.out.println("jah");
-                }
-            });
-            juur.getChildren().add(salvestamine);
-
- */
         }
     }
 
@@ -187,6 +165,7 @@ public class Mäng extends Application {
         }
 
         Stage mängijaNimiAken = new Stage();
+        mängijaNimiAken.setTitle("Mängija nime sisestamine");
         Label mängijaNimeKüsimus = new Label("Sisestage " + (i + 1) + ". mängija nimi: ");
         TextField mängijaNimiTekst = new TextField();
         mängijaNimiTekst.setAlignment(Pos.CENTER_RIGHT);
@@ -198,7 +177,6 @@ public class Mäng extends Application {
             mängijaNimiAken.hide();
             Mängija mängija = new Mängija(nimi, getAlgRaha(), 0, false, 0, värvilist[i]);
             mängijatelist.add(mängija);
-            //System.out.println(mängijatelist.toString());
             avaAken(mängijate_arv, i + 1);
         });
 
@@ -214,7 +192,6 @@ public class Mäng extends Application {
         mängijaNimiAken.setScene(stseen2);
         mängijaNimiAken.show();
         mängijaNimiAken.setResizable(false);
-
     }
 
     //Loob mängulaua ruudu
@@ -276,8 +253,7 @@ public class Mäng extends Application {
         launch(args);
     }
 
-    public void start(Stage peaLava) throws Exception {
-
+    public void start(Stage peaLava) {
         Canvas lõuend = new Canvas(900, 500);
         GraphicsContext gc = lõuend.getGraphicsContext2D();
         gc.fillRect(100, 100, 700, 300);
@@ -338,6 +314,7 @@ public class Mäng extends Application {
 
         //Küsib mängijate arvu
         Stage mituMängijat = new Stage();
+        mituMängijat.setTitle("Mängijate arvu sisetamine");
         Label mituMängijatKüsimus = new Label("Sisestage mängijate arv (maksimaalne mängijate arv on 4)");
         TextField mängijateArvuTekst = new TextField();
         mängijateArvuTekst.setAlignment(Pos.CENTER_RIGHT);
@@ -351,6 +328,7 @@ public class Mäng extends Application {
                 int mängijate_arv = this.getMängijateArv();
 
                 Stage stardiRaha = new Stage();
+                stardiRaha.setTitle("Stardiraha sisestamine");
                 Label stardiRahaKüsimus = new Label("Sisestage stardiraha (positiivne täisarv)");
                 TextField stardiRahaTekst = new TextField();
                 stardiRahaTekst.setAlignment(Pos.CENTER_RIGHT);
@@ -361,7 +339,6 @@ public class Mäng extends Application {
                     try {
                         this.setAlgRaha(Integer.parseInt(stardiRahaTekst.getText()));
                         stardiRaha.hide();
-                        //List<String> nimed = new ArrayList<>();
                         avaAken(mängijate_arv, 0);
 
                         Button veeretuseNupp = new Button("Veereta");
@@ -378,23 +355,22 @@ public class Mäng extends Application {
 
                         Label reeglid = new Label("Käigu alustamiseks vajuta nuppu \"Veereta\". Kui " +
                                 "krunti on võimalik osta, siis saab seda \n teha vajutades nupule \"Ostan krundi\". " +
-                                "Tegevusruutude info kajastub mänguekraanil. \n   Rendi ja tulumaksu maksmine käib automaatselt ja stardiruudust möödudes saab \n      mängija " +
-                                "automaatselt kümnendiku stardirahast. Loosiruudul on võimalik võita \n             või kaotada kuni pool stardirahast. " +
+                                "Tegevusruutude info kajastub mänguekraanil. \n   Rendi ja tulumaksu maksmine käib " +
+                                "automaatselt ja stardiruudust möödudes saab \n      mängija " +
+                                "automaatselt kümnendiku stardirahast. Loosiruudul on võimalik võita " +
+                                "\n             või kaotada kuni pool stardirahast. " +
                                 "Vangist pääsed veeretades duubli.");
                         reeglid.setTextFill(Color.ANTIQUEWHITE);
                         reeglid.setFont(Font.font("Cambria", 15));
                         reeglid.setLayoutY(120);
                         reeglid.setLayoutX(230);
-
                         juur.getChildren().add(reeglid);
 
                         Label infoSilt = new Label("");
-
                         infoSilt.setLayoutY(330);
                         infoSilt.setLayoutX(130);
                         infoSilt.setTextFill(Color.ANTIQUEWHITE);
                         infoSilt.setFont(Font.font("Cambria", 17));
-
                         juur.getChildren().add(infoSilt);
 
                         List<Label> mängijateRahadeLabel = new ArrayList<>();
@@ -407,7 +383,6 @@ public class Mäng extends Application {
                         mängija2raha.setLayoutX(300);
                         mängija3raha.setLayoutX(470);
                         mängija4raha.setLayoutX(640);
-
                         mängija1raha.setLayoutY(370);
                         mängija2raha.setLayoutY(370);
                         mängija3raha.setLayoutY(370);
@@ -425,22 +400,17 @@ public class Mäng extends Application {
 
                         täring1väärtus.setLayoutX(120);
                         täring1väärtus.setLayoutY(120);
-
                         täring2väärtus.setLayoutX(120);
                         täring2väärtus.setLayoutY(160);
-
                         täring1väärtus.setTextFill(Color.WHITESMOKE);
                         täring2väärtus.setTextFill(Color.WHITESMOKE);
-
                         täring1väärtus.setFont(Font.font("Cambria", 20));
                         täring2väärtus.setFont(Font.font("Cambria", 20));
 
                         veeretuseNupp.setLayoutX(430);
                         veeretuseNupp.setLayoutY(240);
-
                         ostaNupp.setLayoutX(330);
                         ostaNupp.setLayoutY(240);
-
                         eiOstaNupp.setLayoutX(510);
                         eiOstaNupp.setLayoutY(240);
 
@@ -450,7 +420,7 @@ public class Mäng extends Application {
                         juur.getChildren().addAll(täring1väärtus, täring2väärtus);
                         juur.getChildren().addAll(mängijateRahadeLabel);
 
-                        //X-d
+                        //X-d vanglisolijate peale
                         Label vangis1 = new Label("X");
                         vangis1.setTextFill(Color.BLACK);
                         vangis1.setLayoutX(ruuduKoordinaat.get(Mängulaud.leiaVangla(mängulaud)).getX()-5);
@@ -481,19 +451,16 @@ public class Mäng extends Application {
                         vangis4.setVisible(false);
 
                         List<Label> xList = new ArrayList<>();
-
                         xList.add(vangis1);
                         xList.add(vangis2);
                         xList.add(vangis3);
                         xList.add(vangis4);
-
                         juur.getChildren().addAll(xList);
 
                         ostaNupp.setDisable(true);
                         eiOstaNupp.setDisable(true);
 
                         veeretuseNupp.setOnMouseClicked(eventVeeretus -> {
-
                             infoSilt.setText("");
 
                             //Kontrollib kelle kord parajasti pooleli on
@@ -504,8 +471,6 @@ public class Mäng extends Application {
                             Mängija praeguseKäiguMängija = mängijatelist.get(kelleKord);
 
                             //Kontrollib kas mängija on pankrotis
-                            //lõpuTingimus(praeguseKäiguMängija);
-
                             int esimeneTäring = veeretus();
                             int teineTäring = veeretus();
 
@@ -524,11 +489,10 @@ public class Mäng extends Application {
 
                             int uusAsukohaIndeks = praeguseKäiguMängija.getAsukoht() + esimeneTäring + teineTäring;
 
-                            //System.out.println(praeguseKäiguMängija.isVangis());
                             if (!praeguseKäiguMängija.isVangis()) {
                                 //Kui ei ole vangis
                                 boolean kasKolmasDuubel = praeguseKäiguMängija.korrigeeriDuubel(esimeneTäring, teineTäring, mängulaud);
-                                //Kontrollib kas lähed duubli tõttu vangi
+                                //Kontrollib, kas lähed duubli tõttu vangi
                                 if (kasKolmasDuubel) {
                                     System.out.println("kolmasDuuble true");
                                     infoSilt.setText(praeguseKäiguMängija.getNimi()+ ": Veeretasid 3. duubli! Lähed Vangi!");
@@ -536,7 +500,7 @@ public class Mäng extends Application {
                                     praeguseKäiguMängija.getNupp().setCenterY(ruuduKoordinaat.get(praeguseKäiguMängija.getAsukoht()).getY());
                                 } else {
                                     //Kui ei lähe duubli tõttu vangi
-                                    //Kui indeks on üle 23, siis korrigeerib ja siis sa ületasid stardi, saad raha
+                                    //Kui indeks on üle 23, siis korrigeerib ja lisab raha
                                     if (uusAsukohaIndeks > 23) {
                                         uusAsukohaIndeks = uusAsukohaIndeks - 24;
                                         praeguseKäiguMängija.setRaha(praeguseKäiguMängija.getRaha() + (getAlgRaha() / 10));
@@ -547,7 +511,6 @@ public class Mäng extends Application {
                                     praeguseKäiguMängija.getNupp().setCenterX(ruuduKoordinaat.get(uusAsukohaIndeks).getX() + 24 * kelleKord);
                                     praeguseKäiguMängija.getNupp().setCenterY(ruuduKoordinaat.get(uusAsukohaIndeks).getY());
 
-                                    //Defineeritud ümber mõned muutujad
                                     int asukoht = praeguseKäiguMängija.getAsukoht();
                                     Mänguruut ruut = mängulaud.get(asukoht);
                                     boolean onOstetud = ruut.isOstetud();
@@ -555,7 +518,7 @@ public class Mäng extends Application {
                                     int mänguruuduHind = ruut.getHind();
                                     int mänguruuduRent = ruut.getRent();
 
-                                    //Kontrollib kas ruut on krunt (ostetav v mitte)
+                                    //Kontrollib, kas ruut on krunt (ostetav v mitte)
                                     if (!ruut.isKrunt()) {
                                         //Kui ruut ei ole krunt, siis on tegu tegevusruuduga
                                         if (uusAsukohaIndeks == Mängulaud.leiaVangiMinek(mängulaud)) {
@@ -568,9 +531,9 @@ public class Mäng extends Application {
                                             //Kui satud loosiruudule
                                             int loosiRaha = (int) (Math.random() * (2 * getAlgRaha() + 1) - getAlgRaha());
                                             if (loosiRaha <0)
-                                                infoSilt.setText(praeguseKäiguMängija.getNimi()+ ": Sattusid loosiruudule! Kaotasid "+(-loosiRaha)+" raha");
+                                                infoSilt.setText(praeguseKäiguMängija.getNimi()+ ": Sattusid loosiruudule! Kaotasid "+(-loosiRaha)+" raha!");
                                             else
-                                                infoSilt.setText(praeguseKäiguMängija.getNimi()+ ": Sattusid loosiruudule! Võitsid "+loosiRaha+" raha");
+                                                infoSilt.setText(praeguseKäiguMängija.getNimi()+ ": Sattusid loosiruudule! Võitsid "+loosiRaha+" raha!");
                                             praeguseKäiguMängija.setRaha(praeguseMängijaraha + loosiRaha);
                                             lõpuTingimus(praeguseKäiguMängija, "Läksid loosiga pankrotti!");
                                         } else if (mängulaud.get(uusAsukohaIndeks).getNimi().equals("Tulumaks")) {
@@ -580,15 +543,15 @@ public class Mäng extends Application {
                                             lõpuTingimus(praeguseKäiguMängija,"Tulumaks oli üle jõu!");
                                             praeguseKäiguMängija.setRaha(praeguseMängijaraha - tulumaks);
                                         } else {
-                                            //Kui satud vangla ruudule või stardiruudule
+                                            //Kui satud vangla- või stardiruudule
                                             ostaNupp.setDisable(true);
                                             eiOstaNupp.setDisable(true);
                                             veeretuseNupp.setDisable(false);
                                         }
                                     } else {
-                                        //Kui ruut, kuhu satud, on krunt
+                                        //Kui satud krundile
                                         if (onOstetud) {
-                                            //Kui see ruut on juba ostetud
+                                            //Kui see krunt on juba ostetud
                                             boolean omanikOnVangis = ruut.getOmanik().isVangis();
                                             int ruuduOmanikuRaha = ruut.getOmanik().getRaha();
                                             if (!omanikOnVangis) {
@@ -605,7 +568,7 @@ public class Mäng extends Application {
                                                 veeretuseNupp.setDisable(false);
                                             }
                                         } else {
-                                            //Kui krunt ei oel ostetud
+                                            //Kui krunt ei ole ostetud
                                             if (ruut.isKrunt() && praeguseMängijaraha >= mänguruuduHind) {
                                                 //Kui sa saad seda krunti osta, siis pakub ostuvõimalust
                                                 veeretuseNupp.setDisable(true);
@@ -632,16 +595,13 @@ public class Mäng extends Application {
                             }
 
                             if (praeguseKäiguMängija.isVangis()) {
-                                System.out.println("Paneb juurde");
                                 xList.get(kelleKord).setVisible(true);
                                 System.out.println(xList.get(kelleKord).isVisible());
                             }
                         });
 
                         ostaNupp.setOnMouseClicked(eventOstmine -> {
-
                             Mängija praeguseKäiguMängija = mängijatelist.get(kelleKord);
-
                             mängulaud.get(praeguseKäiguMängija.getAsukoht()).setOstetud(true);
                             mängulaud.get(praeguseKäiguMängija.getAsukoht()).setOmanik(praeguseKäiguMängija);
                             praeguseKäiguMängija.setRaha(praeguseKäiguMängija.getRaha() - mängulaud.get(praeguseKäiguMängija.getAsukoht()).getHind());
@@ -736,213 +696,5 @@ public class Mäng extends Application {
         peaLava.show();
         peaLava.setResizable(false);
         mituMängijat.show();
-
-        /*
-        //Loome mängulaua
-        ArrayList<Mänguruut> mängulaud = Mängulaud.mängulauaLoomine();
-        Scanner scan = new Scanner(System.in); //klaviatuurilt sisestamiseks
-
-        Mäng mäng = new Mäng();
-        //Küsime kasutajalt mitu mängijat mängib nii kaua kuni sisestatakse sobiv arv
-        while (true) {
-            System.out.println("Sisestage mängijate arv (maksimaalne mängijate arv on 4): ");
-            int mängijate_arv = scan.nextInt();
-            try {
-                mäng.setMängijateArv(mängijate_arv);
-                break;
-            } catch (EbasobivMängijateArvErind e) {
-                System.out.println(e.getMessage());
-            }
-        }
-
-        //Nimetasin mängijate arvu niisuguseks nagu enne, et ei peaks hilisemas koodis igal pool muutma
-        int mängijate_arv = mäng.getMängijateArv();
-
-        //Küsime kasutajalt, mis on stardiraha. Jätkame küsimist, kuni sisestatakse sobiv summa
-        while (true) {
-            System.out.println("Sisestage stardiraha (positiivne täisarv) ");
-            int algRaha = scan.nextInt();
-            try {
-                mäng.setAlgRaha(algRaha);
-                break;
-            } catch (EbasobivAlgRahaErind e) {
-                System.out.println(e.getMessage());
-            }
-        }
-
-        //Loome massiivi, kuhu salvestame mängijate nimed, ja küsime kasutajalt nimed. Seda massiivi kasutame mängijate loomiseks
-        String[] nimed = new String[mäng.getMängijateArv()];
-        for (int i = 0; i < mängijate_arv + 1; i++) {
-            String nimi = scan.nextLine();
-            if (i > 0) {
-                nimed[i-1]=nimi;
-            }
-            if (i < mängijate_arv)
-                System.out.println("Sisestage " + (i + 1) + ". mängija nimi: ");
-        }
-
-        //Nimetasin siin ka mängijate massiivi ümber niisuguseks nagu enne oli
-        Mängija[] mängijad = mäng.looMängijad(nimed);
-        */
-        //Vana kood, ei hakanud ära kustutama igaks juhuks
-        /*
-        //Küsime palju raha mängijatel alguses on
-        int algRaha = 150;
-        boolean rahaSobib = false;
-        while (!rahaSobib) {
-            System.out.println("Sisestage stardiraha (positiivne täisarv): ");
-            int sisestatudRaha = scan.nextInt();
-            if (sisestatudRaha > 0) {
-                rahaSobib = true;
-                algRaha = sisestatudRaha;
-            }
-        }
-
-            //Küsib mängijate arvu ja loob vastava arvu mängijaid
-            int mängijate_arv;
-            Mängija[] mängijad;
-            Mäng mäng;
-            while (true) {
-                System.out.println("Sisestage mängijate arv (maksimaalne mängijate arv on 4): ");
-                mängijate_arv = scan.nextInt();
-                try {
-                    mäng = new Mäng(mängijate_arv);
-                    mängijad = new Mängija[mängijate_arv];
-                    for (int i = 0; i < mängijate_arv + 1; i++) {
-                        String nimi = scan.nextLine();
-                        if (i > 0) {
-                            Mängija mängija = new Mängija(nimi, algRaha, 0, false, 0);
-                            mängijad[i - 1] = mängija;
-                        }
-                        if (i < mängijate_arv)
-                            System.out.println("Sisestage " + (i + 1) + ". mängija nimi: ");
-                    }
-                    break;
-                } catch (EbasobivMängijateArvErind e) {
-                    System.out.println(e.getMessage());
-                }
-            }
-         */
-    /*
-        boolean mängKäib = true; //näitab, kas mäng käib või ei
-
-        //Tsükkel, mis kordub nii kaua kuni mäng kestab
-        while (mängKäib) {
-            //for-tsükkel, et toimiks sama protsess iga mängija jaoks
-            for (int i = 0; i < mängijate_arv; i++) {
-                String kasMängijaOstabVabaks = "";
-
-                //Kui mängija on vangis, siis küsitakse, kas ta soovib end vabaks osta
-                if (mängijad[i].isVangis()) {
-                    System.out.println(mängijad[i].getNimi() + ", oled vangis, kas soovid end 25 raha eest vabaks osta?");
-                    System.out.println("Kui soovid end vabaks osta sisesta: 'jah'");
-                    Scanner kasOstadVabaks = new Scanner(System.in);
-                    kasMängijaOstabVabaks = kasOstadVabaks.nextLine();
-                }
-
-                //Täringuveeretus
-                int esimeneTäring = veeretus();
-                int teineTäring = veeretus();
-                if (!kasMängijaOstabVabaks.equals("jah")) {
-                    System.out.println(mängijad[i].getNimi() + " veeretas: " + esimeneTäring + " ja " + teineTäring + ". ");
-                }
-                //Kontrollitakse järjestikust duublit - kui 3 tükki, siis läheb mängija vangi ja käik jääb vahele
-                mängijad[i].korrigeeriDuubel(esimeneTäring, teineTäring, mängulaud);
-
-                //Kui mängija läks nüüd vangi, siis jääb ta käik vahele
-                if (!mängijad[i].isVangis()) {
-                    System.out.println("Mängija liigub edasi " + (esimeneTäring + teineTäring) + " sammu.");
-                    mängijad[i].setAsukoht(mängijad[i].getAsukoht() + esimeneTäring + teineTäring, mängulaud);
-                    System.out.println(mängijad[i].getNimi() + " on nüüd ruudul " + mängulaud.get(mängijad[i].getAsukoht()).getNimi() + ".");
-                }
-
-                //Rendi maksmine
-                int asukoht = mängijad[i].getAsukoht();
-                if (mängulaud.get(asukoht).getOmanik() != null && mängulaud.get(asukoht).isKrunt() &&
-                        !mängulaud.get(asukoht).getOmanik().isVangis() && !mängulaud.get(asukoht).getOmanik().equals(mängijad[i])) {
-                    Mängija krundiOmanik = mängulaud.get(asukoht).getOmanik();
-                    // Kontrollib kas mängijal on piisavalt raha
-                    if (mängijad[i].getRaha() >= mängulaud.get(asukoht).getRent()) {
-                        mängijad[i].setRaha(mängijad[i].getRaha() - mängulaud.get(asukoht).getRent());
-                        krundiOmanik.setRaha(krundiOmanik.getRaha() + mängulaud.get(asukoht).getRent());
-                        System.out.println("Selle krundi omanik on " + krundiOmanik.getNimi() + ". Maksad talle " +
-                                mängulaud.get(asukoht).getRent() + " raha renti.");
-                    } else {
-                        System.out.println(mängijad[i].getNimi() + ", sul pole rendi maksmiseks piisavalt raha!");
-                        mängKäib = mängijad[i].onPankrotis();
-                        break;
-                    }
-
-                    //Krundi ostmine
-                } else if (mängulaud.get(asukoht).getOmanik() == null && mängulaud.get(asukoht).isKrunt() &&
-                        mängijad[i].getRaha() >= (mängulaud.get(asukoht).getHind())) {
-                    System.out.println(mängijad[i].getNimi() + ", kas soovid osta krunti " + mängulaud.get(asukoht).getNimi() + " hinnaga " + mängulaud.get(asukoht).getHind() + " raha?");
-                    System.out.println("Sul on " + mängijad[i].getRaha() + " raha.");
-                    System.out.println("Kui soovid krunti osta sisesta: 'jah'");
-                    Scanner kasTahadOsta = new Scanner(System.in);
-                    String mängijaOtsus = kasTahadOsta.nextLine();
-                    if (mängijaOtsus.equals("jah")) {
-                        mängulaud.get(asukoht).setOstetud(true);
-                        mängulaud.get(asukoht).setOmanik(mängijad[i]);
-                        mängijad[i].setRaha(mängijad[i].getRaha() - mängulaud.get(asukoht).getHind());
-                        System.out.println("Mängijal " + mängijad[i].getNimi() + " on alles " + mängijad[i].getRaha() + " raha.");
-                    }
-
-                    //Loosiruudule sattumine
-                } else if (mängulaud.get(asukoht).getNimi().equals("Loos")) {
-                    int loosiRaha = (int) (Math.random() * (201) - 100);
-                    if (loosiRaha == 0) {
-                        System.out.println(mängijad[i].getNimi() + ", kahjuks ei võitnud sa loosist midagi.");
-                    } else {
-                        mängijad[i].setRaha(mängijad[i].getRaha() + loosiRaha);
-                        if (loosiRaha > 0) {
-                            System.out.println(mängijad[i].getNimi() + ", võitsid loosiga " + loosiRaha + " raha. Sul on nüüd " + mängijad[i].getRaha() + " raha.");
-                        } else {
-                            if ((mängijad[i].getRaha()) >= 0) {
-                                System.out.println(mängijad[i].getNimi() + ", kaotasid loosiga " + (loosiRaha * (-1)) + " raha. Sul on nüüd " + mängijad[i].getRaha() + " raha.");
-                            } else {
-                                System.out.println(mängijad[i].getNimi() + " kaotas loosiga " + (loosiRaha * (-1)) + " raha.");
-                                mängKäib = mängijad[i].onPankrotis();
-                                break;
-                            }
-                        }
-                    }
-
-                    // Tulumaksuruudule sattumine
-                } else if (mängulaud.get(asukoht).getNimi().equals("Tulumaks")) {
-                    mängijad[i].setRaha(mängijad[i].getRaha() - 20);
-                    System.out.println(mängijad[i].getNimi() + ", pead maksma 20 raha tulumaksu.");
-                    if (mängijad[i].getRaha() < 0) {
-                        mängKäib = mängijad[i].onPankrotis();
-                        break;
-                    } else {
-                        System.out.println("Sul on nüüd " + mängijad[i].getRaha() + " raha.");
-                    }
-                }
-
-
-                //Kui mängija on vangis, siis vaatab, kas mängija saab end vabaks osta või veeretab duubli
-                if (mängijad[i].isVangis()) {
-                    if (kasMängijaOstabVabaks.equals("jah")) {
-                        if (mängijad[i].getRaha() >= 25) {
-                            mängijad[i].setRaha(mängijad[i].getRaha() - 25);
-                            mängijad[i].setVangis(false);
-                            System.out.println("Vabanesid vangist. Sul on alles " + mängijad[i].getRaha() + " raha.");
-                        } else {
-                            System.out.println("Sul pole piisavalt raha, et end vabaks osta.");
-                            mängijad[i].veeretaVangistVabaks(mängulaud);
-                        }
-                    } else {
-                        mängijad[i].veeretaVangistVabaks(mängulaud);
-                    }
-                }
-                System.out.println("Mängija " + mängijad[i].getNimi() + " käik on läbi. Tal on alles " + mängijad[i].getRaha() + " raha. Vajuta enter, et anda käik üle.");
-                Scanner kasEdasi = new Scanner(System.in);
-                String otsus = kasEdasi.nextLine();
-                System.out.println("---------------------------------------------------------------");
-            }
-        }
-         */
     }
-
 }
