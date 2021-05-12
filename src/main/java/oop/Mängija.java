@@ -1,6 +1,5 @@
 package oop;
 
-//import java.sql.SQLOutput;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 
@@ -8,7 +7,6 @@ import java.util.ArrayList;
 
 public class Mängija {
 
-    //Isendiväljad
     private String nimi;
     private int raha;
     private int asukoht;
@@ -19,7 +17,6 @@ public class Mängija {
     private Color värv;
     private Koordinaadid koordinaadid;
 
-    //Konstruktor
     public Mängija(String nimi, int raha, int asukoht, boolean vangis, int duubliteArv, Color värv) {
         this.nimi = nimi;
         this.raha = raha;
@@ -83,7 +80,7 @@ public class Mängija {
         asukoht = Mängulaud.leiaVangla(mängulaud);
     }
 
-    //Meetod, mis rakendub, kui mängija on vangis.
+    //Meetod, mis rakendub, kui mängija on vangis
     public void veeretaVangistVabaks(ArrayList<Mänguruut> mängulaud) {
         if (duubliteArv == 1) {
             vangis = false;
@@ -93,7 +90,6 @@ public class Mängija {
         }
     }
 
-    //Get- ja set-meetodid
     public String getNimi() {
         return nimi;
     }
@@ -130,6 +126,7 @@ public class Mängija {
         this.duubliteArv = duubliteArv;
     }
 
+    //Seda vist ei ole enam vaja
     public void setAsukoht(int asukoht, ArrayList<Mänguruut> mängulaud) {
         /*Kui tahetakse panna asukohta, mis on suurem kui viimane mänguruut,
         siis alustatakse uut ringi + mängija saab raha*/

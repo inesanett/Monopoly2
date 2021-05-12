@@ -1,11 +1,6 @@
 package oop;
 
 import javafx.application.Application;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
-import javafx.event.Event;
-import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.Scene;
@@ -13,21 +8,19 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
 import java.util.*;
 
-import static javafx.application.Application.launch;
+//import static javafx.application.Application.launch;
 
 public class Mäng extends Application {
 
@@ -103,7 +96,7 @@ public class Mäng extends Application {
         return (int) Math.round(Math.random() * 5 + 1);
     }
 
-    //Loome mummud
+    //Nuppude loomine ja stardiruudule panemine
     private void loomeNupud(int mängijate_arv) {
         for (int i = 0; i < mängijatelist.size(); i++) {
             mängijatelist.get(i).getNupp().setCenterX(ruuduKoordinaat.get(0).getX() + 24 * i);
@@ -112,6 +105,7 @@ public class Mäng extends Application {
         }
     }
 
+    //Mängijate nimede sisestamine
     private void avaAken(int mängijate_arv, int i) {
         if (i == mängijate_arv) {
             loomeNupud(mängijate_arv);
@@ -120,11 +114,9 @@ public class Mäng extends Application {
 
         Stage mängijaNimiAken = new Stage();
         Label mängijaNimeKüsimus = new Label("Sisestage " + (i + 1) + ". mängija nimi: ");
-
         TextField mängijaNimiTekst = new TextField();
         mängijaNimiTekst.setAlignment(Pos.CENTER_RIGHT);
         mängijaNimiTekst.setText("");
-
         Button okNupp3 = new Button("OK");
 
         okNupp3.setOnMouseClicked(event3 -> {
@@ -151,28 +143,28 @@ public class Mäng extends Application {
 
     }
 
-    private Rectangle teeKast( Color värv, double tuhmus){
-        Rectangle kast = new Rectangle(100,100);
+    //Loob mängulaua ruud
+    private Rectangle teeKast(Color värv, double tuhmus) {
+        Rectangle kast = new Rectangle(100, 100);
         kast.setFill(värv);
         kast.setOpacity(tuhmus);
         return kast;
     }
 
-    private void ruutudenimed(){
-        //List<Label> list = new ArrayList<>();
+    //Järgnevates meetodites lisatakse lauale ruudu nimi, hind, rent ja omanik
+    private void ruutudenimed() {
         for (int i = 0; i < ruuduKoordinaat.size(); i++) {
             Label label = new Label(mängulaud.get(i).getNimi());
-            //list.add(label);
-            label.setLayoutX(ruuduKoordinaat.get(i).getX()-10);
-            label.setLayoutY(ruuduKoordinaat.get(i).getY()+60);
+            label.setLayoutX(ruuduKoordinaat.get(i).getX() - 10);
+            label.setLayoutY(ruuduKoordinaat.get(i).getY() + 60);
             label.setTextFill(Color.BLACK);
             juur.getChildren().add(label);
         }
     }
 
-    private void ruutudehinnad(){
+    private void ruutudehinnad() {
         for (int i = 0; i < ruuduKoordinaat.size(); i++) {
-            if (!(i == 0 ||i == 4 || i == 8 || i == 12 || i == 16 || i == 20)) {
+            if (!(i == 0 || i == 4 || i == 8 || i == 12 || i == 16 || i == 20)) {
                 Label label = new Label("Hind: " + mängulaud.get(i).getHind());
                 label.setLayoutX(ruuduKoordinaat.get(i).getX() - 10);
                 label.setLayoutY(ruuduKoordinaat.get(i).getY() + 25);
@@ -182,9 +174,9 @@ public class Mäng extends Application {
         }
     }
 
-    private void ruutuderendid(){
+    private void ruutuderendid() {
         for (int i = 0; i < ruuduKoordinaat.size(); i++) {
-            if (!(i == 0 ||i == 4 || i == 8 || i == 12 || i == 16 || i == 20)) {
+            if (!(i == 0 || i == 4 || i == 8 || i == 12 || i == 16 || i == 20)) {
                 Label label = new Label("Rent: " + mängulaud.get(i).getRent());
                 label.setLayoutX(ruuduKoordinaat.get(i).getX() - 10);
                 label.setLayoutY(ruuduKoordinaat.get(i).getY() + 10);
@@ -194,7 +186,7 @@ public class Mäng extends Application {
         }
     }
 
-    private void ruutudeOmanikud(){
+    private void ruutudeOmanikud() {
         for (int i = 0; i < ruuduKoordinaat.size(); i++) {
             if (mängulaud.get(i).getOmanik() != null) {
                 Label label = new Label("Omanik: " + mängulaud.get(i).getOmanik().getNimi());
@@ -206,73 +198,65 @@ public class Mäng extends Application {
         }
     }
 
-
-
     public static void main(String[] args) {
         launch(args);
     }
 
-
     public void start(Stage peaLava) throws Exception {
-        //Mäng mäng = new Mäng();
 
         Canvas lõuend = new Canvas(900, 500);
         GraphicsContext gc = lõuend.getGraphicsContext2D();
         gc.fillRect(100, 100, 700, 300);
         BorderPane borderPane = new BorderPane(lõuend);
 
+        //Loome mänguruudud osade kaupa
         VBox vasakServ = new VBox();
         VBox paremServ = new VBox();
         HBox alumineServ = new HBox();
         HBox ülemineServ = new HBox();
 
         List<Rectangle> ülemised = new ArrayList<>();
-
-        ülemised.add(teeKast(Color.WHITE,1));
+        ülemised.add(teeKast(Color.WHITE, 1));
         for (int i = 0; i < 3; i++) {
-            ülemised.add(teeKast(Color.LIGHTBLUE, 1-0.2*i));
+            ülemised.add(teeKast(Color.LIGHTBLUE, 1 - 0.2 * i));
         }
-        ülemised.add(teeKast(Color.GRAY,1));
+        ülemised.add(teeKast(Color.GRAY, 1));
         for (int i = 0; i < 3; i++) {
-            ülemised.add(teeKast(Color.PURPLE, 1-0.2*i));
+            ülemised.add(teeKast(Color.PURPLE, 1 - 0.2 * i));
         }
-        ülemised.add(teeKast(Color.LIGHTGRAY,1));
+        ülemised.add(teeKast(Color.LIGHTGRAY, 1));
         ülemineServ.getChildren().addAll(ülemised);
         borderPane.setTop(ülemineServ);
 
         List<Rectangle> parempoolsed = new ArrayList<>();
-
         for (int i = 0; i < 3; i++) {
-            parempoolsed.add(teeKast(Color.YELLOWGREEN, 1-0.2*i));
+            parempoolsed.add(teeKast(Color.YELLOWGREEN, 1 - 0.2 * i));
         }
         paremServ.getChildren().addAll(parempoolsed);
         borderPane.setRight(paremServ);
 
         List<Rectangle> alumised = new ArrayList<>();
-
-        alumised.add(teeKast(Color.LIGHTGRAY,1));
+        alumised.add(teeKast(Color.LIGHTGRAY, 1));
         for (int i = 0; i < 3; i++) {
-            alumised.add(teeKast(Color.MAGENTA, 1-0.2*i));
+            alumised.add(teeKast(Color.MAGENTA, 1 - 0.2 * i));
         }
-        alumised.add(teeKast(Color.GRAY,1));
+        alumised.add(teeKast(Color.GRAY, 1));
         for (int i = 0; i < 3; i++) {
-            alumised.add(teeKast(Color.ORANGE, 1-0.2*i));
+            alumised.add(teeKast(Color.ORANGE, 1 - 0.2 * i));
         }
-        alumised.add(teeKast(Color.WHITE,1));
+        alumised.add(teeKast(Color.WHITE, 1));
         alumineServ.getChildren().addAll(alumised);
         borderPane.setBottom(alumineServ);
 
         List<Rectangle> vasakpoolsed = new ArrayList<>();
-
         for (int i = 0; i < 3; i++) {
-            vasakpoolsed.add(teeKast(Color.LIMEGREEN, 1-0.2*i));
+            vasakpoolsed.add(teeKast(Color.LIMEGREEN, 1 - 0.2 * i));
         }
         vasakServ.getChildren().addAll(vasakpoolsed);
         borderPane.setLeft(vasakServ);
 
         juur.getChildren().add(borderPane);
         juur.getChildren().add(lõuend);
-
         ruutudenimed();
         ruutudehinnad();
         ruutuderendid();
@@ -280,18 +264,15 @@ public class Mäng extends Application {
 
         //Küsib mängijate arvu
         Stage mituMängijat = new Stage();
-        //BorderPane juur2 = new BorderPane();
         Label mituMängijatKüsimus = new Label("Sisestage mängijate arv (maksimaalne mängijate arv on 4)");
-        TextField mängjateArvuTekst = new TextField();
-        mängjateArvuTekst.setAlignment(Pos.CENTER_RIGHT);
-        mängjateArvuTekst.setText("");
-        //juur2.setTop(mängjateArvuTekst);
-
+        TextField mängijateArvuTekst = new TextField();
+        mängijateArvuTekst.setAlignment(Pos.CENTER_RIGHT);
+        mängijateArvuTekst.setText("");
         Button okNupp = new Button("OK");
 
         okNupp.setOnMouseClicked(event1 -> {
             try {
-                this.setMängijateArv(Integer.parseInt(mängjateArvuTekst.getText()));
+                this.setMängijateArv(Integer.parseInt(mängijateArvuTekst.getText()));
                 mituMängijat.hide();
                 int mängijate_arv = this.getMängijateArv();
 
@@ -302,17 +283,12 @@ public class Mäng extends Application {
                 stardiRahaTekst.setText("");
 
                 Button okNupp2 = new Button("OK");
-
                 okNupp2.setOnMouseClicked(event2 -> {
                     try {
                         this.setAlgRaha(Integer.parseInt(stardiRahaTekst.getText()));
                         stardiRaha.hide();
-
-                        List<String> nimed = new ArrayList<>();
-
+                        //List<String> nimed = new ArrayList<>();
                         avaAken(mängijate_arv, 0);
-
-                        //ArrayList<Mänguruut> mängulaud = Mängulaud.mängulauaLoomine();
 
                         Button veeretuseNupp = new Button("Veereta");
                         Button ostaNupp = new Button("Ostan krundi");
@@ -380,7 +356,7 @@ public class Mäng extends Application {
                         juur.getChildren().addAll(mängijateRahadeLabel);
 
                         veeretuseNupp.setOnMouseClicked(eventVeeretus -> {
-
+                            //Kontrollib kelle kord parajasti pooleli on
                             kelleKord += 1;
                             if (kelleKord == mängijate_arv)
                                 kelleKord = 0;
@@ -391,6 +367,7 @@ public class Mäng extends Application {
                             täring1väärtus.setText("Täring 1: " + esimeneTäring);
                             täring2väärtus.setText("Täring 2: " + teineTäring);
 
+                            //Mängija rahasumma kuvamine ekraanil
                             int abi = 0;
                             for (int i = 0; i < 4; i++) {
                                 if (abi < mängijate_arv) {
@@ -401,8 +378,8 @@ public class Mäng extends Application {
                             }
 
                             Mängija praeguseKäiguMängija = mängijatelist.get(kelleKord);
-
                             int uusAsukohaIndeks = praeguseKäiguMängija.getAsukoht() + esimeneTäring + teineTäring;
+
                             System.out.println(praeguseKäiguMängija.isVangis());
                             if (!praeguseKäiguMängija.isVangis()) {
                                 praeguseKäiguMängija.korrigeeriDuubel(esimeneTäring, teineTäring, mängulaud);
@@ -413,7 +390,7 @@ public class Mäng extends Application {
 
                                 if (uusAsukohaIndeks > 23) {
                                     uusAsukohaIndeks = uusAsukohaIndeks - 24;
-                                    praeguseKäiguMängija.setRaha(praeguseKäiguMängija.getRaha()+((int) getAlgRaha()/10));
+                                    praeguseKäiguMängija.setRaha(praeguseKäiguMängija.getRaha() + ((int) getAlgRaha() / 10));
                                 }
 
                                 praeguseKäiguMängija.setAsukoht(uusAsukohaIndeks);
@@ -433,11 +410,11 @@ public class Mäng extends Application {
                                         praeguseKäiguMängija.getNupp().setCenterX(ruuduKoordinaat.get(Mängulaud.leiaVangla(mängulaud)).getX() + 24 * kelleKord);
                                         praeguseKäiguMängija.getNupp().setCenterY(ruuduKoordinaat.get(Mängulaud.leiaVangla(mängulaud)).getY());
                                     } else if (mängulaud.get(uusAsukohaIndeks).getNimi().equals("Loos")) {
-                                        int loosiRaha = (int) (Math.random() * (2*getAlgRaha()+1) - getAlgRaha() );
-                                        praeguseKäiguMängija.setRaha(praeguseMängijaraha+loosiRaha);
+                                        int loosiRaha = (int) (Math.random() * (2 * getAlgRaha() + 1) - getAlgRaha());
+                                        praeguseKäiguMängija.setRaha(praeguseMängijaraha + loosiRaha);
                                     } else if (mängulaud.get(uusAsukohaIndeks).getNimi().equals("Tulumaks")) {
-                                        int tulumaks = (int) getAlgRaha()/10;
-                                        praeguseKäiguMängija.setRaha(praeguseMängijaraha-tulumaks);
+                                        int tulumaks = getAlgRaha() / 10;
+                                        praeguseKäiguMängija.setRaha(praeguseMängijaraha - tulumaks);
                                     } else {
                                         ostaNupp.setDisable(true);
                                         eiOstaNupp.setDisable(true);
@@ -468,7 +445,6 @@ public class Mäng extends Application {
                                     }
                                 }
                             } else {
-                                //Võib teha et ainult duubliga saab vangist välja
                                 //Topib Punase X nupu peale
                                 if (esimeneTäring == teineTäring)
                                     praeguseKäiguMängija.setVangis(false);
@@ -649,7 +625,7 @@ public class Mäng extends Application {
 
         VBox vBox = new VBox(10);
         vBox.setAlignment(Pos.CENTER);
-        vBox.getChildren().addAll(mituMängijatKüsimus, mängjateArvuTekst, pane);
+        vBox.getChildren().addAll(mituMängijatKüsimus, mängijateArvuTekst, pane);
 
         Scene stseen2 = new Scene(vBox);
         mituMängijat.setScene(stseen2);

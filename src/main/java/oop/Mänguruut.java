@@ -2,7 +2,6 @@ package oop;
 
 public class Mänguruut {
 
-    //Isendiväljad
     private int asukoht;
     private String nimi;
     private int hind;
@@ -12,7 +11,6 @@ public class Mänguruut {
     private boolean ostetud;
     private Mängija omanik;
 
-    //Konstruktor
     public Mänguruut(int asukoht, String nimi, int hind, int rent, String sektsioon, boolean krunt, boolean ostetud) {
         this.nimi = nimi;
         this.asukoht = asukoht;
@@ -24,8 +22,6 @@ public class Mänguruut {
         this.omanik=null;
     }
 
-
-    //Get-meetodid
     public String getNimi() {
         return nimi;
     }
@@ -58,7 +54,6 @@ public class Mänguruut {
         return omanik;
     }
 
-    //Set-meetodid
     public void setRent(int rent) {
         this.rent = rent;
     }
