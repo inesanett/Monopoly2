@@ -126,23 +126,6 @@ public class Mängija {
         this.duubliteArv = duubliteArv;
     }
 
-    //Seda vist ei ole enam vaja
-    public void setAsukoht(int asukoht, ArrayList<Mänguruut> mängulaud) {
-        /*Kui tahetakse panna asukohta, mis on suurem kui viimane mänguruut,
-        siis alustatakse uut ringi + mängija saab raha*/
-
-        if (asukoht > mängulaud.size() - 1) {//[-1 on siin sp, et esimene ruut on nr 0 ja seega viimane ruut kus saab olla on ruutude arv - 1]
-            this.asukoht = (asukoht - mängulaud.size());
-            this.raha += 20;
-            System.out.println("Möödusid stardiruudust, saad 20 raha! Nüüd on sul " + this.getRaha() + " raha.");
-        } else
-            this.asukoht = asukoht;
-        if (asukoht == Mängulaud.leiaVangiMinek(mängulaud)) {
-            mineVangi(mängulaud);
-            System.out.println("Sattusid \"Mine Vangi\" ruudule - Lähed vangi!");
-        }
-    }
-
     public boolean isVangis() {
         return vangis;
     }
