@@ -7,10 +7,10 @@ Näiteks puudub mängus majade ja hotellide süsteem ning ühiskonna kaardid, m�
 on lihtne rahaloos, kust saab võita või kaotada raha kindlates piirides. Mängus on olemas kruntide ostmise, rendi
 maksmise ja vanglasüsteem. Samuti on olemas tulumaksu ruut ning igale uuele ringile minnes saab mängija raha juurde.
 
-Mängu alguses küsitakse, mitu mängijat mängida soovib (maksimaalselt 4) ning palutakse sisestada mängijate nimed. 
+Programmi saab käivitada gradle'i kaudu. Mängu alguses küsitakse, mitu mängijat mängida soovib (maksimaalselt 4) ning palutakse sisestada mängijate nimed. 
 Samuti küsitakse, kui suure rahasummaga soovitakse mängu alustada. Käigu alguses veeretatakse täringut. Juhul kui 
 mängija ei ole vangis saab ta sattuda erinevatele mänguruutudele. Kui tegu on vaba krundiga ning mängijal on piisavalt
-raha, et krunti osta, antakse talle selleks võimalus. Loosikaartide, vanglasse sattumise, tulumaksu ja rendi maksmise 
+raha, et krunti osta, antakse talle selleks võimalus. Loosiruutude, vanglasse sattumise, tulumaksu ja rendi maksmise 
 süsteem on automatiseeritud. Mäng lõppeb, kui keegi mängijatest jääb pankrotti. Lõpuekraanil kuvatakse mängu kaotaja
 ning kaotamise põhjus. Samuti antakse võimalus mängu võitjad ja kaotajad koos mängimise kellaajaga faili salvestada.
 
